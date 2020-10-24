@@ -65,7 +65,7 @@ fi
 download_package() {
 #Download DVB-Driver-Package
 if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz" "&gitURL;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz" ; then
-  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz.md5")" ]; then
+  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz.md5" | cut -d ' ' -f1)" ]; then
     echo
     echo "---CHECKSUM ERROR!---"
     exit 1
@@ -82,7 +82,7 @@ fi
 download_bzImage() {
 #Download DVB-bzImage
 if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" ; then
-  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}.md5")" ]; then
+  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}.md5" | cut -d ' ' -f1)" ]; then
     echo
     echo "---CHECKSUM ERROR!---"
     exit 1
