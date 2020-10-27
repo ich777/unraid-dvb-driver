@@ -1,0 +1,187 @@
+Menu="Utilities"
+Title="DVB Driver"
+Icon="dvb-driver.png"
+---
+<script>
+//Don't execute commands again if page is refreshed
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+
+<script>
+//Disable submit button if no radio button is selected
+$(function(){
+    $("input[type='radio']").change(function(){
+
+        $("input[type='submit']").prop("disabled", false);
+        //Or
+        //$("input[type='submit']").removeAttr("disabled");
+    });
+});
+</script>
+
+<h1 style="text-align: center;"><span style="color: #800000;">DVB-Driver-Package</span></a></h1>
+<p style="text-align: center;">This Plugin shows information about your DVB Card(s) and you can choose which Package you want to install.</p>
+<div style="width: 50%; float:left">
+    <div id="title">
+    <span class="left"></span>
+    </div>
+    <table class="settings">
+        <tr>
+            <td><b><font size="+1">DVB Info</font></b></td>
+        </tr>
+        <?
+        $dvbModule0 = `dmesg | grep -i dvb | grep -i 'adapter 0'`;
+        if (isset($dvbModule0 ) === true && trim($dvbModule0 ) !== ''):
+        ?>
+        <tr>
+            <td>Loaded Kernel Module DVB1 & Version:</td>
+            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 0' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 0' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
+        </tr>
+        <? endif; ?>
+
+        <?
+        $dvbModule1 = `dmesg | grep -i dvb | grep -i 'adapter 1'`;
+        if (isset($dvbModule1 ) === true && trim($dvbModule1 ) !== ''):
+        ?>
+        <tr>
+            <td>Loaded Kernel Module DVB2 & Version:</td>
+            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 1' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 1' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
+        </tr>
+        <? endif; ?>
+
+        <?
+        $dvbModule2 = `dmesg | grep -i dvb | grep -i 'adapter 2'`;
+        if (isset($dvbModule2 ) === true && trim($dvbModule2 ) !== ''):
+        ?>
+        <tr>
+            <td>Loaded Kernel Module DVB3 & Version:</td>
+            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 2' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 2' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
+        </tr>
+        <? endif; ?>
+
+        <?
+        $dvbModule3 = `dmesg | grep -i dvb | grep -i 'adapter 3'`;
+        if (isset($dvbModule3 ) === true && trim($dvbModule3 ) !== ''):
+        ?>
+        <tr>
+            <td>Loaded Kernel Module DVB4 & Version:</td>
+            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 3' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 3' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
+        </tr>
+        <? endif; ?>
+
+        <?
+        $dvbModule4 = `dmesg | grep -i dvb | grep -i 'adapter 4'`;
+        if (isset($dvbModule4 ) === true && trim($dvbModule4 ) !== ''):
+        ?>
+        <tr>
+            <td>Loaded Kernel Module DVB5 & Version:</td>
+            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 4' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 4' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
+        </tr>
+        <? endif; ?>
+
+        <?
+        $dvbModule5 = `dmesg | grep -i dvb | grep -i 'adapter 5'`;
+        if (isset($dvbModule5 ) === true && trim($dvbModule5 ) !== ''):
+        ?>
+        <tr>
+            <td>Loaded Kernel Module DVB6 & Version:</td>
+            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 5' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 5' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
+        </tr>
+        <? endif; ?>
+
+        <?
+        $dvbModule6 = `dmesg | grep -i dvb | grep -i 'adapter 6'`;
+        if (isset($dvbModule6 ) === true && trim($dvbModule6 ) !== ''):
+        ?>
+        <tr>
+            <td>Loaded Kernel Module DVB7 & Version:</td>
+            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 6' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 6' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
+        </tr>
+        <? endif; ?>
+
+        <?
+        $dvbModule7 = `dmesg | grep -i dvb | grep -i 'adapter 7'`;
+        if (isset($dvbModule7 ) === true && trim($dvbModule7 ) !== ''):
+        ?>
+        <tr>
+            <td>Loaded Kernel Module DVB8 & Version:</td>
+            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 7' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 7' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
+        </tr>
+        <? endif; ?>
+
+    </table>
+</div>
+
+<div style="width: 50%; float:right">
+    <div id="title">
+        <span class="right"></span>
+    </div>
+    <table class="settings">
+        <tr>
+            <td><b><font size="+1">Select preferred DVB Package:</font></b></td>
+        </tr>
+        <tr>            
+            <form id="s" method="post" >
+                <td>Packages:</td>
+                <td>
+                    <p><input type="radio" name="pkg_version" value="libreelec"/> LibreELEC </p>
+                    <p><input type="radio" name="pkg_version" value="digitaldevices"/> DigitalDevices </p>
+                    <p><input type="radio" name="pkg_version" value="xboxone"/> Xbox One USB Adapter </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <p><input name="updatepkgv" disabled="disabled" type="submit" value="Update"/></p>
+                </td>
+            </tr>
+            </form>
+    </table>
+<p style="text-align: left; font-weight: bold;">ATTENTION: Please keep in mind that the boot process can take longer than normal since the plugin<br>downloads (if not already downloaded) and installs the driver on boot.</p>
+</div>
+
+<?php
+//Post Package version
+if(isset($_POST['updatepkgv'])) {
+$pkg_version = $_POST["pkg_version"];
+if ($pkg_version == "libreelec"){
+shell_exec("logger ---LibreELEC DVB Package will be downloaded and installed at next reboot---");
+shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package $pkg_version");
+shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the LibreELEC DVB Package\" -i \"alert\"");
+} elseif ($pkg_version == "digitaldevices"){
+shell_exec("logger ---DigitalDevices DVB Package will be downloaded and installed at next reboot---");
+shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package $pkg_version");
+shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the DigitalDevices DVB Package\" -i \"alert\"");
+} elseif ($pkg_version == "xboxone"){
+shell_exec("logger ---Xbox One DVB Package will be downloaded and installed at next reboot---");
+shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package $pkg_version");
+shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the Xbox One DVB Package\" -i \"alert\"");
+}
+}
+?>
+
+<div style="width: 50%; float:left">
+    <div id="title">
+        <span class="left"></span>
+    </div>
+    <table class="settings">
+        <tr>
+            <td><b><font size="+1">System Info</font></b></td>
+        </tr>
+        <tr>
+            <td>Unraid Version:</td>
+            <td style="color: #99cc00;"><b><?=`cat /etc/unraid-version | cut -d '"' -f2`?></b></td>
+        </tr>
+        <tr>
+            <td>Kernel:</td>
+            <td style="color: #99cc00;"><b><?=`uname -r`?></b></td>
+        </tr>
+        <tr>
+            <td>Compile Date:</td>
+            <td style="color: #99cc00;"><b><?=`uname -v | cut -d ' ' -f3-`?></b></td>
+        </tr>
+    </table>
+</div>
