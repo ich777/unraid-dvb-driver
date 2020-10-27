@@ -38,7 +38,7 @@ rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2>/dev/null|grep -v '&version
 <INLINE>
 **DVB Driver**
 
-DVB Drivers for Unraid (Currently supported packages: LibreELEC Cards, DigitalDevices Cards and Xbox One USB Adapter)
+DVB Drivers for Unraid (Currently supported LibreELEC Cards, DigitalDevices Cards and Xbox One USB Adapter)
 </INLINE>
 </FILE>
 
