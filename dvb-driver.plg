@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2020.10.24">
+  <!ENTITY version   "2020.10.27">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "4b0719d44cd6b0562da89a9f14b4c938">
+  <!ENTITY md5       "2e83487a1bedb8f304f391ffd662a48d">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
@@ -14,6 +14,9 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31">
 
 <CHANGES>
+
+###2020.10.27
+added LibreELEC, DigitalDevices & Xbox One USB DVB Adapter packages
 
 ###2020.10.24
 Initial release
@@ -35,7 +38,7 @@ rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2>/dev/null|grep -v '&version
 <INLINE>
 **DVB Driver**
 
-Initial release from the DVB-Driver-Package for Unraid v6.9.0-beta31 with LibreELEC drivers v1.4.0
+DVB Drivers for Unraid (Currently supported packages: LibreELEC Cards, DigitalDevices Cards & Xbox One USB Adapter)
 </INLINE>
 </FILE>
 
@@ -45,18 +48,12 @@ Initial release from the DVB-Driver-Package for Unraid v6.9.0-beta31 with LibreE
 #Create settings file if not found
 if [ ! -f "&plugin;/settings.cfg" ]; then
   echo 'first_installation=true
-dvb_package=LibreELEC
-package_version=latest
+dvb_package=libreelec
 bzImage_version=none' > "&plugin;/settings.cfg"
 fi
 
 KERNEL_V="$(uname -r)"
 PACKAGE="$(grep "dvb_package" "&plugin;/settings.cfg" | cut -d '=' -f2)"
-VERSION="$(grep "package_version" "&plugin;/settings.cfg" | cut -d '=' -f2)"
-
-if [ "${VERSION}" == "latest" ]; then
-    VERSION="1.4.0"
-fi
 
 if [ ! -d "&plugin;/packages/${KERNEL_V%%-*}" ]; then
   mkdir -p "&plugin;/packages/${KERNEL_V%%-*}"
@@ -64,8 +61,8 @@ fi
 
 download_package() {
 #Download DVB-Driver-Package
-if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz" "&gitURL;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz" ; then
-  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz.md5" | cut -d ' ' -f1)" ]; then
+if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" "&gitURL;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" ; then
+  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz.md5" | cut -d ' ' -f1)" ]; then
     echo
     echo "---CHECKSUM ERROR!---"
     exit 1
@@ -81,8 +78,8 @@ fi
 
 download_bzImage() {
 #Download DVB-bzImage
-if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" ; then
-  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}.md5" | cut -d ' ' -f1)" ]; then
+if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage" ; then
+  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage.md5" | cut -d ' ' -f1)" ]; then
     echo
     echo "---CHECKSUM ERROR!---"
     exit 1
@@ -97,10 +94,10 @@ fi
 }
 
 check_package() {
-if [ ! -f "&plugin;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz" ]; then
+if [ ! -f "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" ]; then
   echo
   echo "-----------------Downloading ${PACKAGE}-DVB-Driver-Package-------------------"
-  echo "---This could take some time, please don't close this window!---"
+  echo "---------This could take some time, please don't close this window!---------"
   download_package
 else
   echo
@@ -109,7 +106,7 @@ fi
 }
 
 check_bzImage() {
-if [ ! -f "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" ]; then
+if [ ! -f "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" ]; then
   echo
   echo "-------------Downloading DVB-bzImage for Kernel v${KERNEL_V%%-*}---------------"
   echo "--------This could take some time, please don't close this window!----------"
@@ -122,7 +119,7 @@ fi
 
 install_package() {
 #Install driver package
-/sbin/installpkg "&plugin;/packages/${KERNEL_V%%-*}/dvb-driver-${PACKAGE}-v${VERSION}-${KERNEL_V}-1.txz"
+/sbin/installpkg "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz"
 depmod >> /dev/null
 }
 
@@ -132,14 +129,14 @@ if [ "$(grep "bzImage_version" "&plugin;/settings.cfg" | cut -d '=' -f2)" == "no
   echo
   echo "--------First installation, patching bzImage for Kernel v${KERNEL_V%%-*}--------"
   mv /boot/bzimage "&plugin;/packages/${KERNEL_V%%-*}/backup-bzImage-${KERNEL_V}"
-  mv "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" /boot/bzimage
+  mv "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" /boot/bzimage
   sed -i '/bzImage_version=/c\bzImage_version='${KERNEL_V%%-*}'' "&plugin;/settings.cfg"
 elif [ "$(grep "bzImage_version" "&plugin;/settings.cfg" | cut -d '=' -f2)" != "${KERNEL_V%%-*}" ]; then
   echo
   echo "-----Kernel version missmatch patching bzImage for Kernel v${KERNEL_V%%-*}-----"
   rm -rf "&plugin;/packages/$(grep "bzImage_version" "&plugin;/settings.cfg" | cut -d '=' -f2)"
   mv /boot/bzimage "&plugin;/packages/${KERNEL_V%%-*}/backup-bzImage-${KERNEL_V}"
-  mv "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" /boot/bzimage
+  mv "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" /boot/bzimage
   sed -i '/bzImage_version=/c\bzImage_version='${KERNEL_V%%-*}'' "&plugin;/settings.cfg"
 elif [ "$(grep "bzImage_version" "&plugin;/settings.cfg" | cut -d '=' -f2)" == "${KERNEL_V%%-*}" ]; then
   echo
@@ -162,10 +159,14 @@ if [ "$(grep "first_installation=" "&plugin;/settings.cfg" | cut -d '=' -f2)" ==
   echo
   echo "---------------Installation of DVB-Driver-Package successfull---------------"
   echo
-  echo "Please reboot your server in order to activate the DVB-Driver-Package"
+  echo "-----------------------------------------------------------------------------"
+  echo "---Please reboot your server in order to activate the DVB-Driver-Package!----"
+  echo "-----------------------------------------------------------------------------"
+  echo
 else
   echo
   echo "---------------Installation of DVB-Driver-Package successfull---------------"
+  echo
 fi
 
 </INLINE>
@@ -184,7 +185,10 @@ removepkg &name;-&version;
 rm -rf /usr/local/emhttp/plugins/&name;
 rm -rf &plugin;
 echo
+echo "----------------------------------------------------------------------------"
 echo "--------DVB-Driver-Package uninstalled, please reboot your server!----------"
+echo "----------------------------------------------------------------------------"
+echo
 
 </INLINE>
 </FILE>
