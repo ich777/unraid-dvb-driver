@@ -109,7 +109,7 @@ fi
 }
 
 check_bzImage() {
-if [ ! -f "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" ]; then
+if [ ! -f "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" ] || [ ! -f "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage-${KERNEL_V}" ]; then
   echo
   echo "-------------Downloading DVB-bzImage for Kernel v${KERNEL_V%%-*}---------------"
   echo "--------This could take some time, please don't close this window!----------"
