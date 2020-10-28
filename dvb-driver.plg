@@ -17,6 +17,8 @@
 
 ###2020.10.27
 - added LibreELEC, DigitalDevices and Xbox One USB DVB Adapter packages
+- check for old packages
+- updated download links
 
 ###2020.10.24
 - Initial release
@@ -54,15 +56,19 @@ fi
 
 KERNEL_V="$(uname -r)"
 PACKAGE="$(grep "dvb_package" "&plugin;/settings.cfg" | cut -d '=' -f2)"
+DL_URL="https://github.com/ich777/unraid-plugins-repo/releases/download/$KERNEL_V"
 
 if [ ! -d "&plugin;/packages/${KERNEL_V%%-*}" ]; then
   mkdir -p "&plugin;/packages/${KERNEL_V%%-*}"
 fi
 
+#Check for old packages
+rm -rf $(ls -d /boot/config/plugins/&name;/packages/* 2>/dev/null|grep -v "${KERNEL_V%%-*}")
+
 download_package() {
 #Download DVB-Driver-Package
-if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" "&gitURL;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" ; then
-  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz.md5" | cut -d ' ' -f1)" ]; then
+if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" "${DL_URL}/${PACKAGE}-1.txz" ; then
+  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" | cut -d ' ' -f1)" != "$(wget -qO- "${DL_URL}/${PACKAGE}-1.txz.md5" | cut -d ' ' -f1)" ]; then
     echo
     echo "---CHECKSUM ERROR!---"
     exit 1
@@ -78,7 +84,7 @@ fi
 
 download_bzImage() {
 #Download DVB-bzImage
-if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage" ; then
+if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" "${DL_URL}/dvb-bzimage" ; then
   if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage.md5" | cut -d ' ' -f1)" ]; then
     echo
     echo "---CHECKSUM ERROR!---"
