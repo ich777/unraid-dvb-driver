@@ -62,9 +62,6 @@ if [ ! -d "&plugin;/packages/${KERNEL_V%%-*}" ]; then
   mkdir -p "&plugin;/packages/${KERNEL_V%%-*}"
 fi
 
-#Check for old packages
-rm -rf $(ls -d /boot/config/plugins/&name;/packages/* 2>/dev/null|grep -v "${KERNEL_V%%-*}")
-
 download_package() {
 #Download DVB-Driver-Package
 if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" "${DL_URL}/${PACKAGE}-1.txz" ; then
