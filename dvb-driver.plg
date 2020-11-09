@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2020.10.27">
+  <!ENTITY version   "2020.11.09">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -14,6 +14,9 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31">
 
 <CHANGES>
+
+###2020.11.09
+- Fixed a bug where md5 check errors out
 
 ###2020.10.27
 - added LibreELEC, DigitalDevices and Xbox One USB DVB Adapter packages
@@ -82,7 +85,7 @@ fi
 download_bzImage() {
 #Download DVB-bzImage
 if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" "${DL_URL}/dvb-bzimage" ; then
-  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" | cut -d ' ' -f1)" != "$(wget -qO- "&gitURL;/packages/${KERNEL_V%%-*}/dvb-bzimage.md5" | cut -d ' ' -f1)" ]; then
+  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/dvb-bzimage" | cut -d ' ' -f1)" != "$(wget -qO- "${DL_URL}/dvb-bzimage.md5" | cut -d ' ' -f1)" ]; then
     echo
     echo "---CHECKSUM ERROR!---"
     exit 1
