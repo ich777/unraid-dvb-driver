@@ -23,6 +23,7 @@ $(function(){
 
 <h1 style="text-align: center;"><span style="color: #800000;">DVB-Driver-Package</span></a></h1>
 <p style="text-align: center;">This Plugin shows information about your DVB Card(s) and you can choose which Package you want to install.</p>
+<p style="text-align: center;"><b>NOTE: The Plugin tries to detect the correct Kernel Modules and load them at system start, but for some DVB cards it is necessary that you add a line to your '/boot/config/go' file like 'modprobe MODULENAME' and save the file.<br>Replace MODULENAME by the Kernel Module that is needed for your card to initalize correctly, after that reboot the server.</b></p>
 <div style="width: 50%; float:left">
     <div id="title">
     <span class="left"></span>
@@ -140,6 +141,7 @@ $(function(){
             </tr>
             </form>
     </table>
+<p style="text-align: left; font-weight: bold;">Currently seclected Driver-Package: <font style="color:red;"><?=`cat /boot/config/plugins/dvb-driver/settings.cfg | grep dvb_package | cut -d '=' -f2`?></font></p>
 <p style="text-align: left; font-weight: bold;">ATTENTION: Please keep in mind that the boot process can take longer than normal since the plugin<br>downloads (if not already downloaded) and installs the driver on boot.</p>
 </div>
 
@@ -150,15 +152,18 @@ $pkg_version = $_POST["pkg_version"];
 if ($pkg_version == "libreelec"){
 shell_exec("logger ---LibreELEC DVB Package will be downloaded and installed at next reboot---");
 shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package $pkg_version");
-shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the LibreELEC DVB Package\" -i \"alert\"");
+shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the LibreELEC DVB Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page.\" -i \"alert\"");
+echo '<script>parent.window.location.reload();</script>';
 } elseif ($pkg_version == "digitaldevices"){
 shell_exec("logger ---DigitalDevices DVB Package will be downloaded and installed at next reboot---");
 shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package $pkg_version");
-shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the DigitalDevices DVB Package\" -i \"alert\"");
+shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the DigitalDevices DVB Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page.\" -i \"alert\"");
+echo '<script>parent.window.location.reload();</script>';
 } elseif ($pkg_version == "xboxone"){
 shell_exec("logger ---Xbox One DVB Package will be downloaded and installed at next reboot---");
 shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package $pkg_version");
-shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the Xbox One DVB Package\" -i \"alert\"");
+shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the Xbox One DVB Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page.\" -i \"alert\"");
+echo '<script>parent.window.location.reload();</script>';
 }
 }
 ?>
