@@ -6,7 +6,7 @@
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "29a2ddf4a2ea373c7234cc853a92cba4">
+  <!ENTITY md5       "ea389ababd874072a9ec6b292f12b445">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
@@ -17,6 +17,8 @@
 
 ###2020.11.14
 - Added information and warning how to load the needed Kernel Module(s) on system startup to initialize the DVB Card(s) correctly
+- Added autodetection of DVB card and loading needed Kernel Module(s)
+- Show selected Driver-Package version to Plugin page
 
 ###2020.11.09
 - Fixed a bug where md5 check errors out
@@ -132,7 +134,8 @@ fi
 install_package() {
 #Install driver package
 /sbin/installpkg "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz"
-depmod >> /dev/null
+depmod -a >> /dev/null
+udevadm trigger
 }
 
 install_bzImage() {
@@ -166,7 +169,7 @@ install_package > /dev/null
 
 #Display message to restart
 if [ "$(grep "first_installation=" "&plugin;/settings.cfg" | cut -d '=' -f2)" == "true" ]; then
-  /usr/local/emhttp/plugins/dynamix/scripts/notify -e "DVB Driver" -d "Please reboot your server in order to activate the DVB-Driver-Package ATTENTION: Please update your 'go' file in order to load the module for your DVB card on system startup, for more information see the DVB Plugin page." -i "alert"
+  /usr/local/emhttp/plugins/dynamix/scripts/notify -e "DVB Driver" -d "Please reboot your server in order to activate the DVB-Driver-Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page." -i "alert"
   sed -i '/first_installation=true/c\first_installation=false' "&plugin;/settings.cfg"
   echo
   echo "---------------Installation of DVB-Driver-Package successfull---------------"
@@ -177,14 +180,12 @@ if [ "$(grep "first_installation=" "&plugin;/settings.cfg" | cut -d '=' -f2)" ==
   echo "---Please reboot your server in order to activate the DVB-Driver-Package!----"
   echo "-----------------------------------------------------------------------------"
   echo
-  modprobe dvb_core
 else
   echo
   echo "---------------Installation of DVB-Driver-Package successfull---------------"
   echo
   echo "ATTENTION: Please update your 'go' file in order to load the module for your DVB card on system startup, for more information see the DVB Plugin page."
   echo
-  modprobe dvb_core
 fi
 
 </INLINE>
