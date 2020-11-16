@@ -2,18 +2,24 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2020.11.14">
+  <!ENTITY version   "2020.11.16">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "4324576e47f8ed5d4093884df3950fcd">
+  <!ENTITY md5       "35e388bc6c8c6fb4fcbee0c42f6cdb88">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
 
-<PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31">
+<PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31" support="https://forums.unraid.net/topic/99027-plugin-dvb-driver/">
+
 
 <CHANGES>
+
+###2020.11.16
+- Updated support link
+- Fixed a issue with DigitalDevices builds
+- Fixed a issue with Xbox One USB builds
 
 ###2020.11.14
 - Added information and warning how to load the needed Kernel Module(s) on system startup to initialize the DVB Card(s) correctly
@@ -160,8 +166,23 @@ fi
 }
 
 #Check if bzImage is allready downloaded and installed
-check_bzImage
-install_bzImage
+echo
+echo "+=============================================================================="
+echo "| WARNING - WARNING - WARNING - WARNING - WARNING - WARNING - WARNING - WARNING"
+echo "|"
+echo "| Don't close this window with the red 'X' in the top right corner until the 'DONE' button is displayed!"
+echo "|"
+echo "| WARNING - WARNING - WARNING - WARNING - WARNING - WARNING - WARNING - WARNING"
+echo "+=============================================================================="
+if [ "$(modinfo dvb_core)" ]; then
+  echo
+  echo "----------------------DVB Drivers already installed!------------------------"
+  exit 0
+else
+  check_bzImage
+  install_bzImage
+fi
+
 
 #Check if DVB-Driver-Package is allready downloaded
 check_package
