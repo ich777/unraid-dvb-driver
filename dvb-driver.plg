@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2020.11.16">
+  <!ENTITY version   "2020.11.17">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "35e388bc6c8c6fb4fcbee0c42f6cdb88">
+  <!ENTITY md5       "fc844153a35d6e4cfff863739706f6e2">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
@@ -15,6 +15,9 @@
 
 
 <CHANGES>
+
+###2020.11.17
+- Added TBS-OpenSource DVB drivers
 
 ###2020.11.16
 - Updated support link
@@ -54,7 +57,7 @@ rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2>/dev/null|grep -v '&version
 <INLINE>
 **DVB Driver**
 
-DVB Drivers for Unraid (Currently supported LibreELEC Cards, DigitalDevices Cards and Xbox One USB Adapter)
+DVB Drivers for Unraid (Currently supported LibreELEC, TBS-OpenSource, DigitalDevices and Xbox One USB Adapter Drivers)
 </INLINE>
 </FILE>
 
