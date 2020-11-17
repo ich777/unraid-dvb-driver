@@ -129,6 +129,7 @@ $(function(){
                 <td>
                     <p><input type="radio" name="pkg_version" value="libreelec"/> LibreELEC </p>
                     <p><input type="radio" name="pkg_version" value="digitaldevices"/> DigitalDevices </p>
+                    <p><input type="radio" name="pkg_version" value="tbsos"/> TBS-OpenSource </p>
                     <p><input type="radio" name="pkg_version" value="xboxone"/> Xbox One USB Adapter </p>
                 </td>
             </tr>
@@ -153,6 +154,11 @@ if ($pkg_version == "libreelec"){
 shell_exec("logger ---LibreELEC DVB Package will be downloaded and installed at next reboot---");
 shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package $pkg_version");
 shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the LibreELEC DVB Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page.\" -i \"alert\"");
+echo '<script>parent.window.location.reload();</script>';
+} elseif ($pkg_version == "tbsos"){
+shell_exec("logger ---TBS-OpenSource DVB Package will be downloaded and installed at next reboot---");
+shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package $pkg_version");
+shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the TBS-OpenSource DVB Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page.\" -i \"alert\"");
 echo '<script>parent.window.location.reload();</script>';
 } elseif ($pkg_version == "digitaldevices"){
 shell_exec("logger ---DigitalDevices DVB Package will be downloaded and installed at next reboot---");
