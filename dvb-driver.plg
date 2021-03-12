@@ -90,7 +90,7 @@ fi
 
 download_package() {
 #Download DVB-Driver-Package
-if wget -q -nc --show-progress --progress=bar:force:noscroll -O -T10 "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" "${DL_URL}/${PACKAGE}-1.txz" ; then
+if wget -q -nc --show-progress --progress=bar:force:noscroll -O "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" "${DL_URL}/${PACKAGE}-1.txz" ; then
   if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" | cut -d ' ' -f1)" != "$(wget -qO- "${DL_URL}/${PACKAGE}-1.txz.md5" | cut -d ' ' -f1)" ]; then
     echo
     echo "---CHECKSUM ERROR!---"
@@ -101,6 +101,7 @@ if wget -q -nc --show-progress --progress=bar:force:noscroll -O -T10 "&plugin;/p
 else
   echo
   echo "---------------Can't download ${PACKAGE}-DVB-Driver-Package-----------------"
+  rm -rf &plugin;
   exit 1
 fi
 }
