@@ -16,6 +16,9 @@
 
 <CHANGES>
 
+###2021.03.22
+- Use IP address instead of hostname for online check
+
 ###2021.03.12
 - Fixed Permissions
 - Added wait for network including timeout
@@ -75,7 +78,7 @@ dvb_package=libreelec' > "&plugin;/settings.cfg"
 fi
 
 #Wait for Network and timeout after 30 seconds
-HOST="www.google.com"
+HOST="8.8.8.8"
 for i in {1..10}; do
   ping -c1 $HOST &amp;> /dev/null &amp;&amp; break;
 done
