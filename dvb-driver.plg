@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.04.05">
+  <!ENTITY version   "2021.04.06">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "99cdacfaa1591015fa361295f89493a2">
+  <!ENTITY md5       "68ae553107aadb7880d791e24efadd61">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
@@ -15,6 +15,11 @@
 
 
 <CHANGES>
+
+###2021.04.06
+- Fixed Radio Buttons not showing current selected driver package version
+- Removed Xbox One USB drivers - included in LibreELEC driver package
+- Bumped number of visible DVB Tuners to 16 in WebUI
 
 ###2021.04.05
 - Added sleep before reloading udev rules
@@ -68,7 +73,8 @@ rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2>/dev/null|grep -v '&version
 <INLINE>
 **DVB Driver**
 
-DVB Drivers for Unraid (Currently supported LibreELEC, TBS-OpenSource, DigitalDevices and Xbox One USB Adapter Drivers)
+DVB Drivers for Unraid.  
+Supported driver packages: LibreELEC, TBS-OpenSource and DigitalDevices.
 </INLINE>
 </FILE>
 
@@ -79,6 +85,13 @@ DVB Drivers for Unraid (Currently supported LibreELEC, TBS-OpenSource, DigitalDe
 if [ ! -f "&plugin;/settings.cfg" ]; then
   echo 'first_installation=true
 dvb_package=libreelec' > "&plugin;/settings.cfg"
+fi
+
+#Check if 'xboxone' package is selected, if yes change it to 'libreelec'
+if [ "$(cat &plugin;/settings.cfg | grep "dvb_package" | cut -d '=' -f2)" == "xboxone" ]; then
+  echo
+  echo "---XboxOneUSB-Driver-Package isn't available anymore changing to LibreELEC---"
+  sed -i "/dvb_package=/c\dvb_package=libreelec" "&plugin;/settings.cfg"
 fi
 
 #Wait for Network and timeout after 30 seconds
