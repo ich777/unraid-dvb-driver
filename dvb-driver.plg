@@ -155,7 +155,7 @@ sleep 4
 udevadm control --reload 2>/dev/null &amp;&amp; udevadm trigger --action=add 2>/dev/null
 }
 
-#Check if DVB-Driver-Package is allready downloaded
+#Check if DVB-Driver-Package is already downloaded
 check_package
 install_package >/dev/null
 
