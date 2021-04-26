@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.04.06">
+  <!ENTITY version   "2021.04.26">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -15,6 +15,9 @@
 
 
 <CHANGES>
+
+###2021.04.26
+- Changed changed udev to be compatble with 6.10.0 and up
 
 ###2021.04.06
 - Fixed Radio Buttons not showing current selected driver package version
@@ -118,6 +121,7 @@ if wget -q -nc -O "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" "${DL_URL
   fi
   echo
   echo "-----------Successfully downloaded ${PACKAGE}-DVB-Driver-Package------------"
+  echo "------------------------Please wait, installing...!-------------------------"
 else
   echo
   echo "---------------Can't download ${PACKAGE}-DVB-Driver-Package-----------------"
