@@ -147,7 +147,7 @@ install_package() {
 /sbin/installpkg "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz"
 depmod -a 2>/dev/null
 sleep 4
-udevadm control --reload 2>/dev/null &amp;&amp; udevadm trigger 2>/dev/null
+udevadm control --reload 2>/dev/null &amp;&amp; udevadm trigger --action=add 2>/dev/null
 }
 
 #Check if DVB-Driver-Package is allready downloaded
