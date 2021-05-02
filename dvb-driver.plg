@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.04.26">
+  <!ENTITY version   "2021.05.02">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -15,6 +15,9 @@
 
 
 <CHANGES>
+
+###2021.05.02
+- Fixed error when installing TBS-OS drivers
 
 ###2021.04.26
 - Changed changed udev to be compatble with 6.10.0 and up
@@ -149,6 +152,12 @@ fi
 
 install_package() {
 #Install driver package
+if [ "${PACKAGE}" == "tbsos" ]; then
+  if lsmod | grep "videobuf2-common" &amp;>/dev/null ; then
+    modprobe -rf videobuf2-common
+    sleep 2
+  fi
+fi
 /sbin/installpkg "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz"
 depmod -a 2>/dev/null
 sleep 4
