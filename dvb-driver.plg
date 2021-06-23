@@ -126,11 +126,11 @@ if wget -q -nc -O "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" "${DL_URL
     exit 1
   fi
   echo
-  echo "-----------Successfully downloaded ${PACKAGE}-DVB-Driver-Package------------"
+  echo "-----------Successfully downloaded ${PACKAGE%%-*}-DVB-Driver-Package------------"
   echo "------------------------Please wait, installing...!-------------------------"
 else
   echo
-  echo "---------------Can't download ${PACKAGE}-DVB-Driver-Package-----------------"
+  echo "---------------Can't download ${PACKAGE%%-*}-DVB-Driver-Package-----------------"
   rm -rf &plugin;
   exit 1
 fi
@@ -146,7 +146,7 @@ if [ ! -f "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" ]; then
   download_package
 else
   echo
-  echo "-----------------${PACKAGE}-DVB-Driver-Package found locally-----------------"
+  echo "-----------------${PACKAGE%%-*}-DVB-Driver-Package found locally-----------------"
   echo "------------------------Please wait, installing...!-------------------------"
   #Check for old packages that are not suitable for this Kernel
   rm -rf $(find &plugin;/packages/ -maxdepth 1 -type d 2>/dev/null | tail -n +2 | grep -v "${KERNEL_V%%-*}")
