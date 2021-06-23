@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.05.02">
+  <!ENTITY version   "2021.06.23">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -15,6 +15,9 @@
 
 
 <CHANGES>
+
+###2021.06.23
+- Changed package download repo
 
 ###2021.05.02
 - Fixed error when installing TBS-OS drivers
@@ -107,8 +110,8 @@ for i in {1..10}; do
 done
 
 KERNEL_V="$(uname -r)"
-PACKAGE="$(grep "dvb_package" "&plugin;/settings.cfg" | cut -d '=' -f2)"
-DL_URL="https://github.com/ich777/unraid-plugins-repo/releases/download/$KERNEL_V"
+PACKAGE="$(grep "dvb_package" "&plugin;/settings.cfg" | cut -d '=' -f2)-plugin-${KERNEL_V}"
+DL_URL="https://github.com/ich777/unraid-dvb-driver/releases/download/$KERNEL_V"
 
 if [ ! -d "&plugin;/packages/${KERNEL_V%%-*}" ]; then
   mkdir -p "&plugin;/packages/${KERNEL_V%%-*}"
