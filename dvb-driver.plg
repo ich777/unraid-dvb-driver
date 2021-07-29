@@ -190,6 +190,7 @@ else
     COMPARE="$(sort -V &lt;(echo -e "${AVAIL_V}\n$CUR_V") | tail -1)"
     if [ "$CUR_V" != "$COMPARE" ]; then
       wget -q -T 5 -O &plugin;/plugin_update_helper "https://raw.githubusercontent.com/ich777/unraid-plugin_update_helper/master/plugin_update_helper"
+      chmod +x &plugin;/plugin_update_helper
     fi
   fi
 fi
