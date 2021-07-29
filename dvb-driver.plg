@@ -9,12 +9,18 @@
   <!ENTITY md5       "68ae553107aadb7880d791e24efadd61">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+  <!ENTITY upd_v     "2021.07.29">
+  <!ENTITY upd_url   "https://raw.githubusercontent.com/ich777/unraid-plugin_update_helper/master/&upd_v;/plugin_update_helper">
+  <!ENTITY upd_md5   "0f447e3368a2ec2a55a282e1b8775430">
 ]>
 
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31" support="https://forums.unraid.net/topic/99027-plugin-dvb-driver/">
 
 
 <CHANGES>
+
+###2021.07.29
+- Added Plugin Update Helper when up-/downgrading unRAID version
 
 ###2021.06.23
 - Changed package download repo
@@ -76,6 +82,11 @@ rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2>/dev/null|grep -v '&version
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.txz" Run="upgradepkg --install-new">
 <URL>&gitURL;/packages/&name;-&version;.txz</URL>
 <MD5>&md5;</MD5>
+</FILE>
+
+<FILE Name="/tmp/pluginupdatehelper/plgupdhlp">
+<URL>&upd_url;</URL>
+<MD5>&upd_md5;</MD5>
 </FILE>
 
 <FILE Name="&emhttp;/README.md">
@@ -170,6 +181,25 @@ udevadm control --reload 2>/dev/null &amp;&amp; udevadm trigger --action=add 2>/
 #Check if DVB-Driver-Package is already downloaded
 check_package
 install_package >/dev/null
+
+#Check if downloaded Plugin Update Helper is installed and up-to-date
+if [ ! -f /usr/bin/plugin_update_helper ]; then
+  cp /tmp/pluginupdatehelper/plgupdhlp /usr/bin/plugin_update_helper
+  chmod +x /usr/bin/plugin_update_helper
+else
+  DL_V="$(grep -E "Plugin-Update-Helper version:" /tmp/pluginupdatehelper/plgupdhlp | awk '{print $4}')"
+  CUR_V="$(grep -E "Plugin-Update-Helper version:" /usr/bin/plugin_update_helper | awk '{print $4}')"
+  COMPARE="$(sort -V <(echo -e "${DL_V}\n$CUR_V") | tail -1)"
+  if [ "$CUR_V" != "$COMPARE" ]; then
+    kill $(ps aux | grep -E "inotifywait -q /boot/changes.txt -e move_self,delete_self" | head -n -1 | awk '{print $2}') 2>/dev/null
+    sleep 1
+    cp /tmp/pluginupdatehelper/plgupdhlp /usr/bin/plugin_update_helper
+    chmod +x /usr/bin/plugin_update_helper
+  fi
+fi
+
+#Start Plugin Update Helper
+echo "/usr/bin/plugin_update_helper" | at now
 
 #Display message to restart
 if [ "$(grep "first_installation=" "&plugin;/settings.cfg" | cut -d '=' -f2)" == "true" ]; then
