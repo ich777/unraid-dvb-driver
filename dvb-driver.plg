@@ -189,7 +189,7 @@ if [ ! -f /usr/bin/plugin_update_helper ]; then
 else
   DL_V="$(grep -E "Plugin-Update-Helper version:" /tmp/pluginupdatehelper/plgupdhlp | awk '{print $4}')"
   CUR_V="$(grep -E "Plugin-Update-Helper version:" /usr/bin/plugin_update_helper | awk '{print $4}')"
-  COMPARE="$(sort -V <(echo -e "${DL_V}\n$CUR_V") | tail -1)"
+  COMPARE="$(sort -V &lt;(echo -e "${DL_V}\n$CUR_V") | tail -1)"
   if [ "$CUR_V" != "$COMPARE" ]; then
     kill $(ps aux | grep -E "inotifywait -q /boot/changes.txt -e move_self,delete_self" | head -n -1 | awk '{print $2}') 2>/dev/null
     sleep 1
