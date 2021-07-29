@@ -210,7 +210,9 @@ else
 fi
 
 #Start Plugin Update Helper
-echo "/usr/bin/plugin_update_helper" | at now
+if [ -z "$(ps aux | grep -E "inotifywait -q /boot/changes.txt -e move_self,delete_self" | grep -v "grep inotifywait" | awk '{print $2}')" ]; then
+  echo "/usr/bin/plugin_update_helper" | at now
+fi
 
 #Display message to restart
 if [ "$(grep "first_installation=" "&plugin;/settings.cfg" | cut -d '=' -f2)" == "true" ]; then
