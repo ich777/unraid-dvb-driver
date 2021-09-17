@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.07.29a">
+  <!ENTITY version   "2021.09.17">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "68ae553107aadb7880d791e24efadd61">
+  <!ENTITY md5       "8014d4e2f5e0d6abe8ef5597d62d78e7">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
@@ -15,6 +15,9 @@
 
 
 <CHANGES>
+
+###2021.09.17
+- Fixed plugin to escape variables properly
 
 ###2021.07.29a
 - Added Plugin Update Helper when up-/downgrading unRAID version
