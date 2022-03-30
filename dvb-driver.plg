@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.09.17">
+  <!ENTITY version   "2022.03.30">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "8014d4e2f5e0d6abe8ef5597d62d78e7">
+  <!ENTITY md5       "297d20a1962d8aea12a38f0bba7a5d34">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
@@ -15,6 +15,9 @@
 
 
 <CHANGES>
+
+###2022.03.30
+- Added Plex PX Series Tuners (Japan) package
 
 ###2021.09.17
 - Fixed plugin to escape variables properly
@@ -89,7 +92,7 @@ rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2>/dev/null|grep -v '&version
 **DVB Driver**
 
 DVB Drivers for Unraid.  
-Supported driver packages: LibreELEC, TBS-OpenSource and DigitalDevices.
+Supported driver packages: LibreELEC, TBS-OpenSource, DigitalDevices and Plex PX Series Tuners (Japan).
 </INLINE>
 </FILE>
 
