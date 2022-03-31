@@ -20,9 +20,29 @@ do
 	xz --check=crc32 --lzma2 $line
 done < <(find /tbs-os/lib/modules/${UNAME}/kernel -name "*.ko")
 
-# Download firmware and extract them to temporary directory
-wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/tbs-tuner-firmwares_v1.0.tar.bz2 http://www.tbsdtv.com/download/document/linux/tbs-tuner-firmwares_v1.0.tar.bz2
+#Download and decompress Firmwares
+if [ ! -f ${DATA_DIR}/tbs-tuner-firmwares_v1.0.tar.bz2 ]; then
+  wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/tbs-tuner-firmwares_v1.0.tar.bz2 http://www.tbsdtv.com/download/document/linux/tbs-tuner-firmwares_v1.0.tar.bz2
+fi
 tar jxvf ${DATA_DIR}/tbs-tuner-firmwares_v1.0.tar.bz2 -C /tbs-os/lib/firmware
+
+#Download and decompress Firmwares for CX24117
+if [ ! -f ${DATA_DIR}/tbs-linux-drivers_v130901.zip ]; then
+  wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/tbs-linux-drivers_v130901.zip http://www.tbsdtv.com/download/document/common/tbs-linux-drivers_v130901.zip
+fi
+if [ ! -f /tbs-os/lib/firmware/dvb-fe-cx24117.fw ]; then
+  unzip -p tbs-linux-drivers_v130901.zip linux-tbs-drivers.tar.bz2 | tar jxOf - linux-tbs-drivers/v4l/tbs6981fe_driver.o.x86_64 | dd bs=1 skip=10144 count=55486 of=/tbs-os/lib/firmware/dvb-fe-cx24117.fw
+fi
+
+#Download firmware for USB Tuner Mygica T230A
+if [ ! -f ${DATA_DIR}/dvb-tuner-si2141-a10-01.tar.gz ]; then
+  wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/dvb-tuner-si2141-a10-01.fw https://github.com/osmc/dvb-firmware-osmc/raw/master/dvb-tuner-si2141-a10-01.fw
+  tar -czvf ${DATA_DIR}/dvb-tuner-si2141-a10-01.tar.gz -C ${DATA_DIR} dvb-tuner-si2141-a10-01.fw
+  rm -f ${DATA_DIR}/dvb-tuner-si2141-a10-01.fw
+fi
+if [ ! -f /tbs-os/lib/firmware/dvb-tuner-si2141-a10-01.fw ]; then
+  tar xzvf ${DATA_DIR}/dvb-tuner-si2141-a10-01.tar.gz -C /tbs-os/lib/firmware
+fi
 
 # Cleanup modules directory
 cd /tbs-os/lib/modules/${UNAME}/
