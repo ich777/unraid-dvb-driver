@@ -30,7 +30,9 @@ fi
 # Download LibreELEC firmware files and install them
 cd ${DATA_DIR}
 mkdir ${DATA_DIR}/lE-v${LE_DRV_V}
-wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/lE-v${LE_DRV_V}.tar.gz https://github.com/LibreELEC/dvb-firmware/archive/${LE_DRV_V}.tar.gz
+if [ ! -f ${DATA_DIR}/lE-v${LE_DRV_V}.tar.gz ]; then
+  wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/lE-v${LE_DRV_V}.tar.gz https://github.com/LibreELEC/dvb-firmware/archive/${LE_DRV_V}.tar.gz
+fi
 mkdir -p /libreelec/lib/firmware
 tar -C ${DATA_DIR}/lE-v${LE_DRV_V} --strip-components=1 -xf ${DATA_DIR}/lE-v${LE_DRV_V}.tar.gz
 rsync -av ${DATA_DIR}/lE-v${LE_DRV_V}/firmware/ /libreelec/lib/firmware/
