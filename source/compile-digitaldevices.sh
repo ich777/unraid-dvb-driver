@@ -1,18 +1,13 @@
 # Create necessary directories and download source
 cd ${DATA_DIR}
-mkdir ${DATA_DIR}/dd-master
-if [ -f ${DATA_DIR}/dd-master.tar.gz ]; then
-	rm -rf ${DATA_DIR}/dd-master.tar.gz
+mkdir -p ${DATA_DIR}/dd-master
+if [ ! -f ${DATA_DIR}/dd-v${DD_DRV_V}.tar.gz ]; then
+  wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/dd-v${DD_DRV_V}.tar.gz https://github.com/DigitalDevices/dddvb/archive/master.tar.gz
 fi
-wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/dd-master.tar.gz https://github.com/DigitalDevices/dddvb/archive/master.tar.gz
-tar -C ${DATA_DIR}/dd-master --strip-components=1 -xf ${DATA_DIR}/dd-master.tar.gz
+tar -C ${DATA_DIR}/dd-master --strip-components=1 -xf ${DATA_DIR}/dd-v${DD_DRV_V}.tar.gz
 cd ${DATA_DIR}/dd-master
-DD_DRV_V="$(cat ${DATA_DIR}/dd-master/ddbridge/ddbridge.h | grep "DDBRIDGE_VERSION" | cut -d '"' -f2)"
-if [ ! -f ${DATA_DIR}/dd-v${DRV_V}.tar.gz ]; then
-	mv ${DATA_DIR}/dd-master.tar.gz ${DATA_DIR}/dd-v${DRV_V}.tar.gz
-else
-	rm -rf ${DATA_DIR}/dd-master.tar.gz
-fi
+make -j${CPU_COUNT}
+make INSTALL_MOD_PATH=/digital_devices install -j${CPU_COUNT}
 
 # Compile DigitialDevices modules and install them to temporary directory
 make -j${CPU_COUNT}
