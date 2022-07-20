@@ -2,19 +2,23 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2022.04.11">
+  <!ENTITY version   "2022.07.20">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "297d20a1962d8aea12a38f0bba7a5d34">
+  <!ENTITY md5       "9cdd28ac0f3a207a08b4539a3e4eccca">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+  <!ENTITY packages  "/boot/config/plugins/&name;/packages">
 ]>
 
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31" support="https://forums.unraid.net/topic/99027-plugin-dvb-driver/">
 
-
 <CHANGES>
+
+###2022.07.20
+- Necessary changes for unRAID 6.11+
+- Cleanup
 
 ###2022.04.11
 - Removed warning message from console on boot
@@ -102,66 +106,37 @@ Supported driver packages: LibreELEC, TBS-OpenSource, DigitalDevices and Plex PX
 <FILE Run="/bin/bash">
 <INLINE>
 
-#Create settings file if not found
-if [ ! -f "&plugin;/settings.cfg" ]; then
-  echo 'first_installation=true
-dvb_package=libreelec' > "&plugin;/settings.cfg"
-fi
-
-#Check if 'xboxone' package is selected, if yes change it to 'libreelec'
-if [ "$(cat &plugin;/settings.cfg | grep "dvb_package" | cut -d '=' -f2)" == "xboxone" ]; then
-  echo
-  echo "---XboxOneUSB-Driver-Package isn't available anymore changing to LibreELEC---"
-  sed -i "/dvb_package=/c\dvb_package=libreelec" "&plugin;/settings.cfg"
-fi
-
-#Wait for Network and timeout after 30 seconds
-HOST="8.8.8.8"
-for i in {1..10}; do
-  ping -c1 $HOST &amp;> /dev/null &amp;&amp; break;
-done
-
-KERNEL_V="$(uname -r)"
-PACKAGE="$(grep "dvb_package" "&plugin;/settings.cfg" | cut -d '=' -f2)-plugin-${KERNEL_V}"
-DL_URL="https://github.com/ich777/unraid-dvb-driver/releases/download/$KERNEL_V"
-
-if [ ! -d "&plugin;/packages/${KERNEL_V%%-*}" ]; then
-  mkdir -p "&plugin;/packages/${KERNEL_V%%-*}"
-fi
-
 download_package() {
-#Download DVB-Driver-Package
-if wget -q -nc -O "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" "${DL_URL}/${PACKAGE}-1.txz" ; then
-  if [ "$(md5sum "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" | cut -d ' ' -f1)" != "$(wget -qO- "${DL_URL}/${PACKAGE}-1.txz.md5" | cut -d ' ' -f1)" ]; then
+# Download DVB-Driver-Package
+if wget -q -nc -O "&packages;/${KERNEL_V%%-*}/${LAT_PACKAGE}" "${DL_URL}/${LAT_PACKAGE}" ; then
+  wget -q -nc -O "&packages;/${KERNEL_V%%-*}/${LAT_PACKAGE}.md5" "${DL_URL}/${LAT_PACKAGE}.md5"
+  if [ "$(md5sum &packages;/${KERNEL_V%%-*}/${LAT_PACKAGE} | awk '{print $1}')" != "$(cat &packages;/${KERNEL_V%%-*}/${LAT_PACKAGE}.md5 | awk '{print $1}')" ]; then
     echo
     echo "---CHECKSUM ERROR!---"
+    rm -rf &plugin; &emhttp;
     exit 1
   fi
   echo
-  echo "-----------Successfully downloaded ${PACKAGE%%-*}-DVB-Driver-Package------------"
+  echo "-----------Successfully downloaded ${PACKAGE}-DVB-Driver-Package------------"
   echo "------------------------Please wait, installing...!-------------------------"
 else
   echo
-  echo "---------------Can't download ${PACKAGE%%-*}-DVB-Driver-Package-----------------"
-  rm -rf &plugin;
+  echo "---------------Can't download ${PACKAGE}-DVB-Driver-Package-----------------"
+  rm -rf &plugin; &emhttp;
   exit 1
 fi
 }
 
 check_package() {
-if [ ! -f "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz" ]; then
+if ! ls -1 &packages;/${KERNEL_V%%-*}/ | grep -q "${PACKAGE}" ; then
+  LAT_PACKAGE="$(wget -qO- https://api.github.com/repos/ich777/unraid-dvb-driver/releases/tags/${KERNEL_V} | jq -r '.assets[].name' | grep "${PACKAGE}" | grep -E -v '\.md5$' | sort -V | tail -1)"
   echo
-  echo "-----------------Downloading ${PACKAGE%%-*}-DVB-Driver-Package-------------------"
+  echo "-----------------Downloading ${PACKAGE}-DVB-Driver-Package-------------------"
   echo "---------This could take some time, please don't close this window!---------"
-  #Check for old packages that are not suitable for this Kernel
-  rm -rf $(find &plugin;/packages/ -maxdepth 1 -type d 2>/dev/null | tail -n +2 | grep -v "${KERNEL_V%%-*}")
   download_package
 else
   echo
-  echo "-----------------${PACKAGE%%-*}-DVB-Driver-Package found locally-----------------"
-  echo "------------------------Please wait, installing...!-------------------------"
-  #Check for old packages that are not suitable for this Kernel
-  rm -rf $(find &plugin;/packages/ -maxdepth 1 -type d 2>/dev/null | tail -n +2 | grep -v "${KERNEL_V%%-*}")
+  echo "-----------------${PACKAGE}-DVB-Driver-Package found locally-----------------"
 fi
 }
 
@@ -173,15 +148,62 @@ if [ "${PACKAGE}" == "tbsos" ]; then
     sleep 2
   fi
 fi
-/sbin/installpkg "&plugin;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz"
+/sbin/installpkg "&packages;/${KERNEL_V%%-*}/${PACKAGE}*.txz"
 depmod -a 2>/dev/null
 sleep 4
 udevadm control --reload 2>/dev/null &amp;&amp; udevadm trigger --action=add 2>/dev/null
 }
 
+# Define Variables
+KERNEL_V="$(uname -r)"
+DL_URL="https://github.com/ich777/unraid-dvb-driver/releases/download/$KERNEL_V"
+
+if [ ! -d "&packages;/${KERNEL_V%%-*}" ]; then
+  mkdir -p "&packages;/${KERNEL_V%%-*}"
+fi
+
+# Create settings file if not found
+if [ ! -f "&plugin;/settings.cfg" ]; then
+  echo 'first_installation=true
+dvb_package=libreelec' > "&plugin;/settings.cfg"
+fi
+
+# Get prefered package version and latest version from GitHub
+PACKAGE="$(grep "dvb_package" "&plugin;/settings.cfg" | cut -d '=' -f2)"
+
+#Check if 'xboxone' package is selected, if yes change it to 'libreelec'
+if [ "$(cat &plugin;/settings.cfg | grep "dvb_package" | cut -d '=' -f2)" == "xboxone" ]; then
+  echo
+  echo "---XboxOneUSB-Driver-Package isn't available anymore changing to LibreELEC---"
+  sed -i "/dvb_package=/c\dvb_package=libreelec" "&plugin;/settings.cfg"
+fi
+
+#Check for old packages that are not suitable for this Kernel
+rm -rf $(ls -d &packages;/* | grep -v "${KERNEL_V%%-*}")
+rm -rf $(find &packages;/${KERNEL_V%%-*}/ -type f -maxdepth 1 | grep -v "$(cat &plugin;/settings.cfg | grep "dvb_package" | cut -d '=' -f2)")
+
 #Check if DVB-Driver-Package is already downloaded
 check_package
-install_package >/dev/null
+if [ ! "$(ls -1 /var/log/packages/ | grep -E "digitaldevices|libreelec|px4drv|tbsos")" ]; then
+  install_package >/dev/null
+fi
+
+#Display message to restart
+if [ "$(grep "first_installation=" "&plugin;/settings.cfg" | cut -d '=' -f2)" == "true" ]; then
+  /usr/local/emhttp/plugins/dynamix/scripts/notify -e "DVB Driver" -d "Please reboot your server in order to activate the DVB-Driver-Package (by default LibreELEC) ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page." -i "alert" -l "Main"
+  sed -i '/first_installation=true/c\first_installation=false' "&plugin;/settings.cfg"
+  echo
+  echo "---------------Installation of DVB-Driver-Package successful----------------"
+  echo
+  echo "-----------------------------------------------------------------------------"
+  echo "---Please reboot your server in order to activate the DVB-Driver-Package!----"
+  echo "-----------------------------------------------------------------------------"
+  echo
+else
+  echo
+  echo "---------------Installation of DVB-Driver-Package successful----------------"
+  echo
+fi
 
 #Check if Plugin Update Helper is downloaded and up-to-date
 if [ ! -f &plugin;/plugin_update_helper ]; then
@@ -223,23 +245,6 @@ if [ -z "$(ps aux | grep -E "inotifywait -q /boot/changes.txt -e move_self,delet
   echo "/usr/bin/plugin_update_helper" | at now &gt; /dev/null 2&gt;&amp;1
 fi
 
-#Display message to restart
-if [ "$(grep "first_installation=" "&plugin;/settings.cfg" | cut -d '=' -f2)" == "true" ]; then
-  /usr/local/emhttp/plugins/dynamix/scripts/notify -e "DVB Driver" -d "Please reboot your server in order to activate the DVB-Driver-Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page." -i "alert"
-  sed -i '/first_installation=true/c\first_installation=false' "&plugin;/settings.cfg"
-  echo
-  echo "---------------Installation of DVB-Driver-Package successful----------------"
-  echo
-  echo "-----------------------------------------------------------------------------"
-  echo "---Please reboot your server in order to activate the DVB-Driver-Package!----"
-  echo "-----------------------------------------------------------------------------"
-  echo
-else
-  echo
-  echo "---------------Installation of DVB-Driver-Package successful----------------"
-  echo
-fi
-
 </INLINE>
 </FILE>
 
@@ -250,8 +255,8 @@ echo "----------------------------------------"
 echo "---Uninstalling DVB-Driver-Package---"
 echo "----------------------------------------"
 # Remove plugin related files
-removepkg &name;-&version;
-rm -rf /usr/local/emhttp/plugins/&name;
+removepkg &name;-&version; >/dev/null 2>&amp;1
+rm -rf &emhttp;
 rm -rf &plugin;
 echo
 echo "----------------------------------------------------------------------------"
