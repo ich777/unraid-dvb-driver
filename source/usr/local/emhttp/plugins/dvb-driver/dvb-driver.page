@@ -15,15 +15,11 @@ $selected_driver = shell_exec("echo -n $(cat /boot/config/plugins/dvb-driver/set
 </script>
 
 <script>
-//Disable submit button if no radio button is selected
-$(function(){
-    $("input[type='radio']").change(function(){
-
-        $("input[type='submit']").prop("disabled", false);
-        //Or
-        //$("input[type='submit']").removeAttr("disabled");
-    });
-});
+function createContainer(form) {
+    var package = form.pkg_version.value;
+    openBox("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh&arg1="+package,"Downloading Package",600,800,true);
+    return false;
+    }
 </script>
 
 <h1 style="text-align: center;"><span style="color: #800000;">DVB-Driver-Package</span></a></h1>
@@ -230,37 +226,13 @@ $(function(){
                 <td>
                 </td>
                 <td>
-                    <p><input name="updatepkgv" disabled="disabled" type="submit" value="Update"/></p>
+                    <input type="button" value="Update & Download" onclick="createContainer(this.form)">
                 </td>
             </tr>
             </form>
     </table>
 <p style="text-align: left; font-weight: bold;">ATTENTION: Please keep in mind that the boot process can take longer than normal since the plugin<br>downloads (if not already downloaded) and installs the driver on boot.</p>
 </div>
-
-<?php
-//Post Package version
-if(isset($_POST['updatepkgv'])) {
-$pkg_version = $_POST["pkg_version"];
-if ($pkg_version == "libreelec"){
-shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package ".escapeshellarg($pkg_version)."");
-shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the LibreELEC DVB Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page.\" -i \"alert\"");
-echo '<script>parent.window.location.reload();</script>';
-} elseif ($pkg_version == "tbsos"){
-shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package ".escapeshellarg($pkg_version)."");
-shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the TBS-OpenSource DVB Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page.\" -i \"alert\"");
-echo '<script>parent.window.location.reload();</script>';
-} elseif ($pkg_version == "digitaldevices"){
-shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package ".escapeshellarg($pkg_version)."");
-shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the DigitalDevices DVB Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page.\" -i \"alert\"");
-echo '<script>parent.window.location.reload();</script>';
-} elseif ($pkg_version == "px4drv"){
-shell_exec("/usr/local/emhttp/plugins/dvb-driver/include/exec.sh update_package ".escapeshellarg($pkg_version)."");
-shell_exec("/usr/local/emhttp/plugins/dynamix/scripts/notify -e \"DVB Driver Installation\" -d \"Please restart your server to complete the installation from the Plex PX Series Tuners Package ATTENTION: Please update your 'go' file if the plugin doesn't load the Kernel Module correctly for you DVB card, for more information see the DVB Plugin page.\" -i \"alert\"");
-echo '<script>parent.window.location.reload();</script>';
-}
-}
-?>
 
 <div style="width: 50%; float:left">
     <div id="title">
@@ -277,10 +249,6 @@ echo '<script>parent.window.location.reload();</script>';
         <tr>
             <td>Kernel:</td>
             <td style="color: #99cc00;"><b><?=`uname -r`?></b></td>
-        </tr>
-        <tr>
-            <td>Compile Date:</td>
-            <td style="color: #99cc00;"><b><?=`uname -v | cut -d ' ' -f3-`?></b></td>
         </tr>
     </table>
 </div>
