@@ -11,7 +11,18 @@ cd ${DATA_DIR}/TBS_OS/media_build
 # Compile TBS-OpenSource modules and install them to temporary directory
 make dir DIR=../media
 make allyesconfig
-make -j${CPU_COUNT} -i
+
+#Workaround for CONFIG_VIDEO_CX23885
+sed -i "/# CONFIG_VIDEO_CX23885 is not set/c\CONFIG_VIDEO_CX23885=m" v4l/.config
+
+#Workaround for Kernel 5.19+
+sed -i -r 's/(^CONFIG.*_RC.*=)./\1n/g' v4l/.config
+sed -i -r 's/(^CONFIG.*_IR.*=)./\1n/g' v4l/.config
+sed -i "/CONFIG_VIDEO_TM6000=m/c\# CONFIG_VIDEO_TM6000 is not set" v4l/.config
+sed -i "/CONFIG_VIDEO_TM6000_DVB=m/c\# CONFIG_VIDEO_TM6000_DVB is not set" v4l/.config
+sed -i "/CONFIG_VIDEO_TM6000_ALSA=m/c\# CONFIG_VIDEO_TM6000_ALSA is not set" v4l/.config
+
+make -j${CPU_COUNT}
 DESTDIR=/tbs-os make install -j${CPU_COUNT}
 
 #Compress modules
