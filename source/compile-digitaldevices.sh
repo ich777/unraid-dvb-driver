@@ -1,17 +1,17 @@
-# Create necessary directories and download source
+# Create necessary directories and download source from Github
 cd ${DATA_DIR}
 mkdir -p ${DATA_DIR}/dd-master
-if [ ! -f ${DATA_DIR}/dd-v${DD_DRV_V}.tar.gz ]; then
-  wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/dd-v${DD_DRV_V}.tar.gz https://github.com/DigitalDevices/dddvb/archive/master.tar.gz
-fi
-tar -C ${DATA_DIR}/dd-master --strip-components=1 -xf ${DATA_DIR}/dd-v${DD_DRV_V}.tar.gz
 cd ${DATA_DIR}/dd-master
-make -j${CPU_COUNT}
-make INSTALL_MOD_PATH=/digital_devices install -j${CPU_COUNT}
 
-# Compile DigitialDevices modules and install them to temporary directory
+git clone https://github.com/DigitalDevices/dddvb
+cd ${DATA_DIR}/dd-master/dddvb
+git checkout master
+DD_DRV_V="$(git log -1 --format="%cs" | sed 's/-//g')"
+sed -i '/$(MAKE) -C app/s/^/# /' ${DATA_DIR}/dd-master/dddvb/Makefile
+
+# Compile drivers and move them to temporary directory
 make -j${CPU_COUNT}
-make INSTALL_MOD_PATH=/digital_devices install -j${CPU_COUNT}
+make MDIR=/digital_devices install -j${CPU_COUNT}
 
 # Cleanup modules directory
 cd /digital_devices/lib/modules/${UNAME}
