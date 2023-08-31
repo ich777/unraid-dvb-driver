@@ -30,177 +30,33 @@ function createContainer(form) {
     </div>
     <table class="settings">
         <tr>
-            <td><b><font size="+1">DVB Info</font></b></td>
+            <td><b><font size="+1" title="Adapter information are generated on boot once. You have to reboot if you change your adapters so that these changes are reflected here.">DVB Info</font></b></td>
         </tr>
-        <?
-        if (trim($selected_driver ) !== 'px4drv'):
+        <? if (trim($selected_driver ) !== 'px4drv'): ?>
+        <?php
+        $dvb_dir = scandir('/dev/dvb');
+        if ($dvb_dir !== false) {
+          $drivers = file('/tmp/dvb-driver', FILE_IGNORE_NEW_LINES);
+          for ($lineIndex = 0; $lineIndex <= 15; $lineIndex++) {
+            if (isset($drivers[$lineIndex]) && !empty($drivers[$lineIndex])) {
+              $driver_array = explode(' ', $drivers[$lineIndex], 2);
+              if (!empty($driver_array[1])) {
+                echo "<tr><td>Kernel Module DVB" . ($lineIndex + 1) . " & Version:</td><td style='color:purple'><b>" . $driver_array[0] . " | " . $driver_array[1] . "</b></td></tr>";
+              } else {
+                echo "<tr><td>Kernel Module DVB" . ($lineIndex + 1) . ":</td><td style='color:purple'><b>" . $driver_array[0] . "</b></td></tr>";
+              }
+            } elseif (is_dir('/dev/dvb/adapter' . $lineIndex)) {
+              echo "<tr><td>Adapter DVB" . ($lineIndex + 1) . ":</td><td style='color:purple'><b>Found but Unknown to the plugin</b></td></tr>";
+            }
+            unset($driver_array);
+          }
+        } else {
+          echo "<tr><td style='color:red'><b>No Adapters found!</b></td></tr>";
+        }
         ?>
-        <tr>      
-        <?
-        $dvbModule0 = `dmesg | grep -i dvb | grep -i 'adapter 0'`;
-        if (isset($dvbModule0 ) === true && trim($dvbModule0 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB1 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 0' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 0' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule1 = `dmesg | grep -i dvb | grep -i 'adapter 1'`;
-        if (isset($dvbModule1 ) === true && trim($dvbModule1 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB2 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 1' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 1' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule2 = `dmesg | grep -i dvb | grep -i 'adapter 2'`;
-        if (isset($dvbModule2 ) === true && trim($dvbModule2 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB3 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 2' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 2' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule3 = `dmesg | grep -i dvb | grep -i 'adapter 3'`;
-        if (isset($dvbModule3 ) === true && trim($dvbModule3 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB4 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 3' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 3' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule4 = `dmesg | grep -i dvb | grep -i 'adapter 4'`;
-        if (isset($dvbModule4 ) === true && trim($dvbModule4 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB5 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 4' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 4' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule5 = `dmesg | grep -i dvb | grep -i 'adapter 5'`;
-        if (isset($dvbModule5 ) === true && trim($dvbModule5 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB6 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 5' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 5' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule6 = `dmesg | grep -i dvb | grep -i 'adapter 6'`;
-        if (isset($dvbModule6 ) === true && trim($dvbModule6 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB7 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 6' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 6' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule7 = `dmesg | grep -i dvb | grep -i 'adapter 7'`;
-        if (isset($dvbModule7 ) === true && trim($dvbModule7 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB8 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 7' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 7' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-        
-        <?
-        $dvbModule8 = `dmesg | grep -i dvb | grep -i 'adapter 8'`;
-        if (isset($dvbModule8 ) === true && trim($dvbModule8 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB9 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 8' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 8' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule9 = `dmesg | grep -i dvb | grep -i 'adapter 9'`;
-        if (isset($dvbModule9 ) === true && trim($dvbModule9 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB10 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 9' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 9' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule10 = `dmesg | grep -i dvb | grep -i 'adapter 10'`;
-        if (isset($dvbModule10 ) === true && trim($dvbModule10 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB11 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 10' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 10' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule11 = `dmesg | grep -i dvb | grep -i 'adapter 11'`;
-        if (isset($dvbModule11 ) === true && trim($dvbModule11 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB12 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 11' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 11' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule12 = `dmesg | grep -i dvb | grep -i 'adapter 12'`;
-        if (isset($dvbModule12 ) === true && trim($dvbModule12 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB13 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 12' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 12' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule13 = `dmesg | grep -i dvb | grep -i 'adapter 13'`;
-        if (isset($dvbModule13 ) === true && trim($dvbModule13 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB14 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 13' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 13' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule14 = `dmesg | grep -i dvb | grep -i 'adapter 14'`;
-        if (isset($dvbModule14 ) === true && trim($dvbModule14 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB15 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 14' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 14' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>
-
-        <?
-        $dvbModule15 = `dmesg | grep -i dvb | grep -i 'adapter 15'`;
-        if (isset($dvbModule15 ) === true && trim($dvbModule15 ) !== ''):
-        ?>
-        <tr>
-            <td>Loaded Kernel Module DVB16 & Version:</td>
-            <td style="color:purple"><b><?=`dmesg | grep -i dvb | grep -i 'adapter 15' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1`?><b> | <?=`modinfo "$(dmesg | grep -i dvb | grep -i 'adapter 15' | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9`?></b></td>
-        </tr>
-        <? endif; ?>        
-
         <? else : ?>
-            <td>Plex PX Series Tuners (Japan)</td>
-
+            <tr><td style='color:purple'><b>Plex PX Series Tuners (Japan)</b></td></tr>
         <? endif; ?>
-
     </table>
 </div>
 
