@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2022.07.20">
+  <!ENTITY version   "2022.08.31">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "9cdd28ac0f3a207a08b4539a3e4eccca">
+  <!ENTITY md5       "6c589afd676d94cf343f2bb5b35869c8">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
   <!ENTITY packages  "/boot/config/plugins/&name;/packages">
@@ -15,6 +15,11 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31" support="https://forums.unraid.net/topic/99027-plugin-dvb-driver/">
 
 <CHANGES>
+
+###2023.08.31
+- Detect adapters with their Kernel module and version on boot or plugin installation once and generate static list
+- Show adapters which are not known to the plugin
+- Cleanup
 
 ###2022.07.20
 - Necessary changes for unRAID 6.11+
@@ -186,6 +191,19 @@ rm -rf $(find &packages;/${KERNEL_V%%-*}/ -type f -maxdepth 1 | grep -v "$(cat &
 check_package
 if [ ! "$(ls -1 /var/log/packages/ | grep -E "digitaldevices|libreelec|px4drv|tbsos")" ]; then
   install_package >/dev/null
+fi
+
+#Generate dvb-driver list
+if [ ! -f /tmp/dvb-driver ]; then
+  for ((i=0; i&lt;=15; i++))
+  do
+    module=$(dmesg | grep -i dvb | grep -i "adapter $i" | cut -d ']' -f2 | cut -d ' ' -f2 | head -1 2>/dev/null)
+    if [ ! -z "${module}" ]; then
+      version=$(modinfo "$(dmesg | grep -i dvb | grep -i "adapter $i" | cut -d ']' -f2 | cut -d ' ' -f2 | head -1)" | grep "version" | head -1 | cut -d ' ' -f9 2>/dev/null)
+      echo "$module $version" >> /tmp/dvb-driver
+    fi
+    unset module version
+  done
 fi
 
 #Display message to restart
