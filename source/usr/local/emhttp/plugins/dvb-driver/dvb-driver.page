@@ -22,10 +22,16 @@ function createContainer(form) {
     }
 </script>
 
-<h1 style="text-align: center;"><span style="color: #800000;">DVB-Driver-Package</span></a></h1>
+<style>
+table tbody td {
+    line-height:normal
+}
+</style>
+
+<h1 style="text-align: center;"><a title="DVB Driver Support Thread" href="https://forums.unraid.net/topic/99027-plugin-dvb-driver/" target="_blank" rel="noopener"><span style="color: #800000;">DVB-Driver</span></a></h1>
 <p style="text-align: center;">This Plugin shows information about your DVB Card(s) and you can choose which Driver package you want to install.</p>
 <div style="width: 50%; float:left">
-    <div id="title">
+    <div class="title" id="title">
     <span class="left"></span>
     </div>
     <table class="settings">
@@ -61,7 +67,7 @@ function createContainer(form) {
 </div>
 
 <div style="width: 50%; float:right">
-    <div id="title">
+    <div class="title" id="title">
         <span class="right"></span>
     </div>
     <table class="settings">
@@ -69,7 +75,7 @@ function createContainer(form) {
             <td><b><font size="+1">Select preferred DVB Package:</font></b></td>
         </tr>
         <tr>            
-            <form id="s" method="post" >
+            <form class="title" id="s" method="post" >
                 <td>Packages:</td>
                 <td>
                     <p><input type="radio" name="pkg_version" value="libreelec" <?php echo ( $selected_driver == "libreelec") ? 'checked="checked"' : ''; ?>/> LibreELEC </p>
@@ -91,7 +97,7 @@ function createContainer(form) {
 </div>
 
 <div style="width: 50%; float:left">
-    <div id="title">
+    <div class="title" id="title">
         <span class="left"></span>
     </div>
     <table class="settings">
