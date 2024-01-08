@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2023.08.31">
+  <!ENTITY version   "2024.01.08">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "6c589afd676d94cf343f2bb5b35869c8">
+  <!ENTITY md5       "a1f5b018c9557a3099e7413d46a4ca48">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
   <!ENTITY packages  "/boot/config/plugins/&name;/packages">
@@ -15,6 +15,10 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31" support="https://forums.unraid.net/topic/99027-plugin-dvb-driver/">
 
 <CHANGES>
+
+###2024.01.08
+- Add support link to plugin page headline
+- Fix minor style fixes for the plugin pages
 
 ###2023.08.31
 - Detect adapters with their Kernel module and version on boot or plugin installation once and generate static list
