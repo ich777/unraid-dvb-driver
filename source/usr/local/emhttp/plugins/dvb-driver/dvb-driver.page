@@ -28,16 +28,13 @@ table tbody td {
 }
 </style>
 
-<h1 style="text-align: center;"><a title="DVB Driver Support Thread" href="https://forums.unraid.net/topic/99027-plugin-dvb-driver/" target="_blank" rel="noopener"><span style="color: #800000;">DVB-Driver</span></a></h1>
+<h1 style="text-align: center;"><a title="DVB Driver Support Thread" href="https://forums.unraid.net/topic/99027-plugin-dvb-driver/" target="_blank" rel="noopener"><span style="color: #c23232;">DVB-Driver</span></a></h1>
 <p style="text-align: center;">This Plugin shows information about your DVB Card(s) and you can choose which Driver package you want to install.</p>
-<div style="width: 50%; float:left">
-    <div class="title" id="title">
-    <span class="left"></span>
-    </div>
-    <table class="settings">
-        <tr>
-            <td><b><font size="+1" title="Adapter information are generated on boot once. You have to reboot if you change your adapters so that these changes are reflected here.">DVB Info</font></b></td>
-        </tr>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: left;">
+
+<div style="width: 49%; border: 1px solid #ccc; margin: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+<p><b><font size="+1" title="Adapter information are generated on boot once. You have to reboot if you change your adapters so that these changes are reflected here.">DVB Info</font></b></p>
         <? if (trim($selected_driver ) !== 'px4drv'): ?>
         <?php
         $dvb_dir = scandir('/dev/dvb');
@@ -47,35 +44,29 @@ table tbody td {
             if (isset($drivers[$lineIndex]) && !empty($drivers[$lineIndex])) {
               $driver_array = explode(' ', $drivers[$lineIndex], 2);
               if (!empty($driver_array[1])) {
-                echo "<tr><td>Kernel Module DVB" . ($lineIndex + 1) . " & Version:</td><td style='color:purple'><b>" . $driver_array[0] . " | " . $driver_array[1] . "</b></td></tr>";
+                echo "<p>Kernel Module DVB" . ($lineIndex + 1) . " & Version: <b style='color:#b820d6'>" . $driver_array[0] . " | " . $driver_array[1] . "</b></p>";
               } else {
-                echo "<tr><td>Kernel Module DVB" . ($lineIndex + 1) . ":</td><td style='color:purple'><b>" . $driver_array[0] . "</b></td></tr>";
+                echo "<p>Kernel Module DVB" . ($lineIndex + 1) . ":</td><td style='color:#b820d6'><b>" . $driver_array[0] . "</b></p>";
               }
             } elseif (is_dir('/dev/dvb/adapter' . $lineIndex)) {
-              echo "<tr><td>Adapter DVB" . ($lineIndex + 1) . ":</td><td style='color:purple'><b>Found but Unknown to the plugin</b></td></tr>";
+              echo "<p>Adapter DVB" . ($lineIndex + 1) . ":</td><td style='color:#b820d6'><b>Found but Unknown to the plugin</b></p>";
             }
             unset($driver_array);
           }
         } else {
-          echo "<tr><td style='color:red'><b>No Adapters found!</b></td></tr>";
+          echo "<p style='color:red'>No Adapters found!</b></p>";
         }
         ?>
         <? else : ?>
-            <tr><td style='color:purple'><b>Plex PX Series Tuners (Japan)</b></td></tr>
+            <p style='color:#b820d6'>Plex PX Series Tuners (Japan)</p>
         <? endif; ?>
-    </table>
 </div>
 
-<div style="width: 50%; float:right">
-    <div class="title" id="title">
-        <span class="right"></span>
-    </div>
-    <table class="settings">
-        <tr>
-            <td><b><font size="+1">Select preferred DVB Package:</font></b></td>
-        </tr>
-        <tr>            
-            <form class="title" id="s" method="post" >
+<div style="width: 49%; border: 1px solid #ccc; margin: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+<p><b><font size="+1">Select preferred DVB Package:</font></b></p>
+<br/>
+    <table>
+            <form id="s" method="post" >
                 <td>Packages:</td>
                 <td>
                     <p><input type="radio" name="pkg_version" value="libreelec" <?php echo ( $selected_driver == "libreelec") ? 'checked="checked"' : ''; ?>/> LibreELEC </p>
@@ -93,24 +84,13 @@ table tbody td {
             </tr>
             </form>
     </table>
-<p style="text-align: left; font-weight: bold;">ATTENTION: Please keep in mind that the boot process can take longer than normal since the plugin<br>downloads (if not already downloaded) and installs the driver on boot.</p>
+<p style="text-align: left; font-weight: bold;">ATTENTION: Please keep in mind that the boot process can take longer than normal since the plugin downloads (if not already downloaded) and installs the driver on boot.</p>
 </div>
 
-<div style="width: 50%; float:left">
-    <div class="title" id="title">
-        <span class="left"></span>
-    </div>
-    <table class="settings">
-        <tr>
-            <td><b><font size="+1">System Info</font></b></td>
-        </tr>
-        <tr>
-            <td>Unraid Version:</td>
-            <td style="color: #99cc00;"><b><?=`cat /etc/unraid-version | cut -d '"' -f2`?></b></td>
-        </tr>
-        <tr>
-            <td>Kernel:</td>
-            <td style="color: #99cc00;"><b><?=`uname -r`?></b></td>
-        </tr>
-    </table>
+<div style="width: 49%; border: 1px solid #ccc; margin: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+<p><b><font size="+1">System Info</font></b></p>
+<p>Unraid Version: <b style="color: #99cc00;"><?=`cat /etc/unraid-version | cut -d '"' -f2`?></b></p>
+<p>Kernel: <b style="color: #99cc00;"><?=`uname -r`?></b></p>
+</div>
+
 </div>
