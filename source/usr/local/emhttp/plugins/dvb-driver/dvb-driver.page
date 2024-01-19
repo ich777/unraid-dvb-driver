@@ -8,7 +8,7 @@ $selected_driver = shell_exec("echo -n $(cat /boot/config/plugins/dvb-driver/set
 ?>
 
 <script>
-//Don't execute commands again if page is refreshed
+    //Don't execute commands again if page is refreshed
     if ( window.history.replaceState ) {
         window.history.replaceState( null, null, window.location.href );
     }
@@ -31,9 +31,9 @@ table tbody td {
 <h1 style="text-align: center;"><a title="DVB Driver Support Thread" href="https://forums.unraid.net/topic/99027-plugin-dvb-driver/" target="_blank" rel="noopener"><span style="color: #c23232;">DVB-Driver</span></a></h1>
 <p style="text-align: center;">This Plugin shows information about your DVB Card(s) and you can choose which Driver package you want to install.</p>
 
-<div style="display: flex; flex-wrap: wrap; justify-content: left;">
+<div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;">
 
-<div style="width: 49%; border: 1px solid #ccc; margin: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+<div style="min-width: 750px; max-width: 800px; margin: 5px;">
 <p><b><font size="+1" title="Adapter information are generated on boot once. You have to reboot if you change your adapters so that these changes are reflected here.">DVB Info</font></b></p>
         <? if (trim($selected_driver ) !== 'px4drv'): ?>
         <?php
@@ -60,13 +60,15 @@ table tbody td {
         <? else : ?>
             <p style='color:#b820d6'>Plex PX Series Tuners (Japan)</p>
         <? endif; ?>
+        <br/>
 </div>
 
-<div style="width: 49%; border: 1px solid #ccc; margin: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+<div style="min-width: 750px; max-width: 800px; margin: 5px;">
 <p><b><font size="+1">Select preferred DVB Package:</font></b></p>
 <br/>
     <table>
             <form id="s" method="post" >
+            <tr>
                 <td>Packages:</td>
                 <td>
                     <p><input type="radio" name="pkg_version" value="libreelec" <?php echo ( $selected_driver == "libreelec") ? 'checked="checked"' : ''; ?>/> LibreELEC </p>
@@ -84,13 +86,8 @@ table tbody td {
             </tr>
             </form>
     </table>
-<p style="text-align: left; font-weight: bold;">ATTENTION: Please keep in mind that the boot process can take longer than normal since the plugin downloads (if not already downloaded) and installs the driver on boot.</p>
-</div>
-
-<div style="width: 49%; border: 1px solid #ccc; margin: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
-<p><b><font size="+1">System Info</font></b></p>
-<p>Unraid Version: <b style="color: #99cc00;"><?=`cat /etc/unraid-version | cut -d '"' -f2`?></b></p>
-<p>Kernel: <b style="color: #99cc00;"><?=`uname -r`?></b></p>
+<p style="text-align: left; font-weight: bold;">ATTENTION: Please keep in mind that the boot process can take longer than normal since<br />the plugin downloads (if not already downloaded) and installs the driver on boot.</p>
+<br/>
 </div>
 
 </div>
