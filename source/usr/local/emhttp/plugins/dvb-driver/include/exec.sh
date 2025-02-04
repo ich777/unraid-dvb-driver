@@ -2,8 +2,8 @@
 echo
 # Set Variables
 KERNEL_V="$(uname -r)"
-DL_URL="https://github.com/ich777/unraid-dvb-driver/releases/download/$KERNEL_V"
-LAT_PACKAGE="$(wget -qO- https://api.github.com/repos/ich777/unraid-dvb-driver/releases/tags/${KERNEL_V} | jq -r '.assets[].name' | grep "${1}" | grep -E -v '\.md5$' | sort -V | tail -1)"
+DL_URL="https://github.com/unraid/unraid-dvb-driver/releases/download/$KERNEL_V"
+LAT_PACKAGE="$(wget -qO- https://api.github.com/repos/unraid/unraid-dvb-driver/releases/tags/${KERNEL_V} | jq -r '.assets[].name' | grep "${1}" | grep -E -v '\.md5$' | sort -V | tail -1)"
 
 if [ "${1}" == "$(cat /boot/config/plugins/dvb-driver/settings.cfg | grep "dvb_package=" | cut -d '=' -f2)" ]; then
   echo "---Please wait, downloading new version from ${1}-DVB-Driver-Package---"
