@@ -1,20 +1,23 @@
 <?xml version='1.0' standalone='yes'?>
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "dvb-driver">
-  <!ENTITY author    "ich777">
-  <!ENTITY version   "2024.01.19">
+  <!ENTITY author    "unraid">
+  <!ENTITY version   "2025.02.04">
   <!ENTITY launch    "Settings/dvb-driver">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "e027ac998998a8abc650b42f18df1079">
+  <!ENTITY md5       "aebec819ddcd2b925212b16e8e33b2d6">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
   <!ENTITY packages  "/boot/config/plugins/&name;/packages">
 ]>
 
-<PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31" support="https://forums.unraid.net/topic/99027-plugin-dvb-driver/">
+<PLUGIN  name="&name;" author="limetech" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0-beta31" support="https://forums.unraid.net/topic/99027-plugin-dvb-driver/">
 
 <CHANGES>
+
+###2025.02.04
+- Swtich repo from ich777 to unraid
 
 ###2024.01.19
 - Style changes
@@ -145,7 +148,7 @@ fi
 
 check_package() {
 if ! ls -1 &packages;/${KERNEL_V%%-*}/ | grep -q "${PACKAGE}" ; then
-  LAT_PACKAGE="$(wget -qO- https://api.github.com/repos/ich777/unraid-dvb-driver/releases/tags/${KERNEL_V} | jq -r '.assets[].name' | grep "${PACKAGE}" | grep -E -v '\.md5$' | sort -V | tail -1)"
+  LAT_PACKAGE="$(wget -qO- https://api.github.com/repos/unraid/unraid-dvb-driver/releases/tags/${KERNEL_V} | jq -r '.assets[].name' | grep "${PACKAGE}" | grep -E -v '\.md5$' | sort -V | tail -1)"
   echo
   echo "-----------------Downloading ${PACKAGE}-DVB-Driver-Package-------------------"
   echo "---------This could take some time, please don't close this window!---------"
@@ -172,7 +175,7 @@ udevadm control --reload 2>/dev/null &amp;&amp; udevadm trigger --action=add 2>/
 
 # Define Variables
 KERNEL_V="$(uname -r)"
-DL_URL="https://github.com/ich777/unraid-dvb-driver/releases/download/$KERNEL_V"
+DL_URL="https://github.com/unraid/unraid-dvb-driver/releases/download/$KERNEL_V"
 
 if [ ! -d "&packages;/${KERNEL_V%%-*}" ]; then
   mkdir -p "&packages;/${KERNEL_V%%-*}"
